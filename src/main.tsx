@@ -29,7 +29,7 @@ const router = createBrowserRouter([
       { path: 'showcase', element: <Showcase /> },
     ],
   },
-]);
+], { basename: import.meta.env.BASE_URL });
 
 // Render the application into the root element.  StrictMode helps
 // highlight potential problems in an application by intentionally
