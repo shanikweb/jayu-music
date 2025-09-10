@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Theme tokens derived from the curated repository.  These CSS
+  custom properties define the core colours, spacing and typography
+  used throughout the site.  Dark mode variants live on the
+  [data-theme="dark"] selector.  When toggling themes you can set
+  data-theme on the html element (see App.tsx in curated for an
+  example).
+*/
+
+:root {
+  --page-max-width: 1440px;
+  --bg: #FFFCF5;
+  --ink: #222;
+  --muted: #555;
+  --primary: #2a5db0;
+  --accent-bg: #e6eefc;
+  --divider: #d9d9d9;
+  /* Layout tokens */
+  --header-h: 96px;
+  --top-pad: 2rem;
+  /* Chip tokens */
+  --chip-bg: #f4f4f4;
+  --chip-border: #e0e0e0;
+  --chip-fg: #333;
+  /* Navigation accent */
+  --nav-accent: #6b3b2a;
+  /* Table and index accents */
+  --table-label: #8c95af;
+  --index-accent: #6981c9;
+}
+
+[data-theme="dark"] {
+  --bg: #181818;
+  --ink: #e9e9eb;
+  --muted: #a7a7ad;
+  --primary: #8bb4ff;
+  --accent-bg: #172033;
+  --divider: #2a2a2a;
+  --chip-bg: #222325;
+  --chip-border: #2d2f33;
+  --chip-fg: #ddd;
+  --nav-accent: #e9cabd;
+  --table-label: #b4bddb;
+  --index-accent: #9fb4ff;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Neue Montreal', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container is used to wrap page content and constrain width */
+.container {
+  max-width: var(--page-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.app-shell {
+  background: var(--bg);
+}
+
+.main {
+  flex: 1;
+  padding: calc(var(--header-h) + var(--top-pad)) clamp(28px, 6vw, 96px) 2.5rem;
+}
+
+@media (max-width: 900px) {
+  .main {
+    padding: calc(var(--header-h) + 1rem) clamp(16px, 5vw, 32px) 2rem;
+  }
+}
+
+/* Minimal card component */
+.card {
+  background: var(--accent-bg);
+  border: 1px solid var(--divider);
+  border-radius: var(--border-radius, 16px);
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
