@@ -14,3 +14,7 @@ Deploy to GitHub Pages
 Notes
 - React Router is configured with the same base so routes work under `/jayu-music/`.
 - `404.html` mirrors `index.html` so direct links and refreshes work.
+
+Customize the homepage
+- Add a bio photo at `public/avatar.jpg` (optional; a fallback avatar renders if missing).
+- Edit `src/pages/Home.tsx` to tweak bio copy and the grid tiles.
