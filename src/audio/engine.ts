@@ -7,15 +7,22 @@ export function getAudioCtx() {
   return audioCtx;
 }
 
-function env(ctx: AudioContext, duration = 0.2, gain = 1, curve: 'lin' | 'exp' = 'exp') {
+function env(
+  ctx: AudioContext,
+  duration = 0.2,
+  gain = 1,
+  startTime?: number,
+  curve: 'lin' | 'exp' = 'exp'
+) {
   const g = ctx.createGain();
-  g.gain.setValueAtTime(0.00001, ctx.currentTime);
+  const t = startTime ?? ctx.currentTime;
+  g.gain.setValueAtTime(0.00001, t);
   if (curve === 'exp') {
-    g.gain.exponentialRampToValueAtTime(Math.max(0.00001, gain), ctx.currentTime + 0.005);
-    g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.00001, gain), t + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.00001, t + duration);
   } else {
-    g.gain.linearRampToValueAtTime(gain, ctx.currentTime + 0.005);
-    g.gain.linearRampToValueAtTime(0.00001, ctx.currentTime + duration);
+    g.gain.linearRampToValueAtTime(gain, t + 0.005);
+    g.gain.linearRampToValueAtTime(0.00001, t + duration);
   }
   return g;
 }
@@ -48,13 +55,13 @@ export function playSnare(when?: number, gainMul = 1) {
   const bp = ctx.createBiquadFilter();
   bp.type = 'bandpass';
   bp.frequency.value = 1800;
-  const g = env(ctx, 0.2, 0.6 * gainMul);
+  const g = env(ctx, 0.2, 0.6 * gainMul, t);
   noise.connect(bp).connect(g).connect(ctx.destination);
   noise.start(t);
   noise.stop(t + 0.2);
   // Body
   const osc = ctx.createOscillator();
-  const og = env(ctx, 0.12, 0.3 * gainMul);
+  const og = env(ctx, 0.12, 0.3 * gainMul, t);
   osc.type = 'triangle';
   osc.frequency.setValueAtTime(180, t);
   osc.connect(og).connect(ctx.destination);
@@ -75,7 +82,7 @@ export function playClap(when?: number, gainMul = 1) {
     const hp = ctx.createBiquadFilter();
     hp.type = 'highpass';
     hp.frequency.value = 1200;
-    const g = env(ctx, 0.12, 0.5 * gainMul);
+    const g = env(ctx, 0.12, 0.5 * gainMul, t + startOffset);
     src.connect(hp).connect(g).connect(ctx.destination);
     src.start(t + startOffset);
     src.stop(t + startOffset + 0.12);
@@ -109,7 +116,7 @@ export function playHat(when?: number, open = false, gainMul = 1) {
     // choke any ringing open hats
     stopOpenHats();
   }
-  const g = env(ctx, open ? 0.35 : 0.07, (open ? 0.35 : 0.25) * gainMul);
+  const g = env(ctx, open ? 0.35 : 0.07, (open ? 0.35 : 0.25) * gainMul, t);
   src.connect(hp).connect(g).connect(ctx.destination);
   src.start(t);
   src.stop(t + (open ? 0.35 : 0.07));

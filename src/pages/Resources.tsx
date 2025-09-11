@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import BarBlocks from '../components/BarBlocks';
 import AudioRecorder from '../components/AudioRecorder';
 import StepSequencer from '../components/StepSequencer';
 import { setSample } from '../audio/engine';
@@ -20,7 +19,6 @@ export default function Resources() {
         <div className="text-sm opacity-80 mb-2">Jump to:</div>
         <nav className="flex flex-wrap gap-3 text-sm">
           <a className="underline" href="#grid">Beat Grid</a>
-          <a className="underline" href="#arrangement">BarBlocks</a>
           <a className="underline" href="#recorder">Sampler Recorder</a>
           <a className="underline" href="#links">Helpful Links</a>
         </nav>
@@ -35,16 +33,7 @@ export default function Resources() {
         </p>
         <StepSequencer />
       </section>
-
-      {/* BarBlocks */}
-      <section id="arrangement" className="card">
-        <div className="font-medium mb-1">BarBlocks — Arrange Your Sections</div>
-        <p className="opacity-80 text-sm mb-3">
-          Drag blocks to reorder your song structure. Add or remove Intro/Main/Break/Outro
-          sections to sketch an arrangement.
-        </p>
-        <BarBlocks />
-      </section>
+      
 
       {/* Sampler Recorder */}
       <section id="recorder" className="card">
