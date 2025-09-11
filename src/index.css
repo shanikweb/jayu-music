@@ -13,15 +13,15 @@
 
 :root {
   --page-max-width: 1440px;
-  --bg: #FFFCF5;
-  --ink: #222;
-  --muted: #555;
+  --bg: #FFFCF5; /* warm paper */
+  --ink: #1f1f1f; /* deep neutral ink */
+  --muted: #666;  /* subtle body */
   --primary: #2a5db0;
   --accent-bg: #e6eefc;
   --divider: #d9d9d9;
   /* Layout tokens */
-  --header-h: 96px;
-  --top-pad: 2rem;
+  --header-h: 64px;
+  --top-pad: 1.25rem;
   /* Chip tokens */
   --chip-bg: #f4f4f4;
   --chip-border: #e0e0e0;
@@ -73,22 +73,15 @@ body {
   background: var(--bg);
 }
 
-.main {
-  flex: 1;
-  padding: calc(var(--header-h) + var(--top-pad)) clamp(28px, 6vw, 96px) 2.5rem;
-}
-
-@media (max-width: 900px) {
-  .main {
-    padding: calc(var(--header-h) + 1rem) clamp(16px, 5vw, 32px) 2rem;
-  }
+/* Content area spacing handled by layout container; keep things airy */
+.page {
+  padding-top: 0.25rem;
 }
 
 /* Minimal card component */
 .card {
-  background: var(--accent-bg);
+  background: transparent;
   border: 1px solid var(--divider);
-  border-radius: var(--border-radius, 16px);
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius, 14px);
+  padding: 1.25rem;
 }
