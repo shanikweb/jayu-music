@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 
 type Status = 'idle' | 'recording' | 'stopped' | 'unsupported' | 'denied' | 'error';
 
-export default function AudioRecorder() {
+type Props = {
+  onSample?: (buffer: AudioBuffer) => void;
+};
+
+export default function AudioRecorder({ onSample }: Props) {
   const [status, setStatus] = useState<Status>('idle');
   const [url, setUrl] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -30,10 +34,21 @@ export default function AudioRecorder() {
       mr.ondataavailable = (e) => {
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
-      mr.onstop = () => {
+      mr.onstop = async () => {
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
         const objectUrl = URL.createObjectURL(blob);
         setUrl(objectUrl);
+        // Optionally decode to AudioBuffer for sampler usage
+        if (onSample) {
+          try {
+            const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const arr = await blob.arrayBuffer();
+            const buf = await ctx.decodeAudioData(arr.slice(0));
+            onSample(buf);
+          } catch (e) {
+            // ignore decode errors
+          }
+        }
       };
 
       mr.start();
@@ -98,4 +113,3 @@ export default function AudioRecorder() {
     </div>
   );
 }
-
