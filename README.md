@@ -18,3 +18,10 @@ Notes
 Customize the homepage
 - Add a bio photo at `public/avatar.jpg` (optional; a fallback avatar renders if missing).
 - Edit `src/pages/Home.tsx` to tweak bio copy and the grid tiles.
+
+Custom drum samples (optional)
+- Place files in `public/samples/` with these names (any of .wav/.mp3/.ogg):
+  - `kick.wav`, `snare.wav`, `clap.wav`, `hat.wav`, `openhat.wav`
+- On load, the app will try to fetch and decode these files and use them instead of the synthesized drums.
+- Keep files short (sub‑second to a few hundred ms) for best results.
+- After adding files, run `npm run dev` locally or `npm run build` to update `docs/` for GitHub Pages.
