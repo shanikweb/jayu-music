@@ -119,6 +119,9 @@ export default function StepSequencer() {
     if (timerId.current) window.clearTimeout(timerId.current);
     timerId.current = null;
     setIsPlaying(false);
+    // Reset to beginning so the next play starts from step 0
+    stepRef.current = 0;
+    setCurrentStep(0);
   }
 
   // Keyboard input
@@ -236,7 +239,7 @@ export default function StepSequencer() {
                     <td key={step} className="p-0 align-middle">
                       <button
                         onClick={() => toggle(rIdx, step)}
-                        className="m-[2px] w-7 h-7 rounded border"
+                        className="m-[2px] w-7 h-7 rounded-none border"
                         style={{
                           background: on ? 'var(--ink)' : 'transparent',
                           color: on ? 'white' : 'inherit',

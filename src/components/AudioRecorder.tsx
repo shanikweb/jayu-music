@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { getAudioCtx, setSamplePitch } from '../audio/engine';
 
 type Status = 'idle' | 'recording' | 'stopped' | 'unsupported' | 'denied' | 'error';
 
@@ -13,6 +14,7 @@ export default function AudioRecorder({ onSample }: Props) {
   const mediaRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
   const timerRef = useRef<number | null>(null);
+  const [pitch, setPitch] = useState(0); // semitones -24..+24
 
   useEffect(() => {
     if (!('MediaRecorder' in window)) setStatus('unsupported');
@@ -41,7 +43,7 @@ export default function AudioRecorder({ onSample }: Props) {
         // Optionally decode to AudioBuffer for sampler usage
         if (onSample) {
           try {
-            const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const ctx = getAudioCtx();
             const arr = await blob.arrayBuffer();
             const buf = await ctx.decodeAudioData(arr.slice(0));
             onSample(buf);
@@ -95,6 +97,22 @@ export default function AudioRecorder({ onSample }: Props) {
           {status === 'recording' ? 'Recording… ' : 'Ready'} {mm}:{ss}
         </span>
       </div>
+      {/* Pitch control for the recorded/loaded sample */}
+      <label className="flex items-center gap-2 text-sm">
+        <span>Pitch</span>
+        <input
+          type="range"
+          min={-24}
+          max={24}
+          value={pitch}
+          onChange={(e) => {
+            const s = Number(e.target.value);
+            setPitch(s);
+            setSamplePitch(s);
+          }}
+        />
+        <span className="tabular-nums w-12">{pitch >= 0 ? `+${pitch}` : `${pitch}`} st</span>
+      </label>
       {status === 'unsupported' && (
         <div className="text-sm opacity-80">MediaRecorder not supported in this browser.</div>
       )}

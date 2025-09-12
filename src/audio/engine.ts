@@ -129,8 +129,16 @@ export function playHat(when?: number, open = false, gainMul = 1) {
 }
 
 let sampleBuffer: AudioBuffer | null = null;
+let sampleSemitones = 0; // global pitch offset for the user sample
 export function setSample(buffer: AudioBuffer | null) {
   sampleBuffer = buffer;
+}
+export function setSamplePitch(semitones: number) {
+  // clamp to reasonable musical range
+  sampleSemitones = Math.max(-24, Math.min(24, Math.round(semitones)));
+}
+export function getSamplePitch() {
+  return sampleSemitones;
 }
 export function hasSample() {
   return !!sampleBuffer;
@@ -141,6 +149,15 @@ export function playSample(when?: number, gainMul = 1) {
   const t = when ?? ctx.currentTime;
   const src = ctx.createBufferSource();
   src.buffer = sampleBuffer;
+  // Apply pitch via playbackRate (semitones -> rate)
+  const rate = Math.pow(2, sampleSemitones / 12);
+  try {
+    src.playbackRate.setValueAtTime(rate, t);
+  } catch {
+    // fallback: assign directly
+    // @ts-ignore
+    src.playbackRate.value = rate;
+  }
   const g = ctx.createGain();
   g.gain.setValueAtTime(0.85 * gainMul, t);
   src.connect(g).connect(ctx.destination);
